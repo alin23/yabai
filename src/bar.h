@@ -40,6 +40,19 @@ struct bar
     char **_power_icon_strip;
     char *_clock_icon;
     char *_space_icon;
+
+    struct rgba_color foreground_color1;
+    struct rgba_color foreground_color2;
+    struct rgba_color foreground_color3;
+    struct rgba_color foreground_color4;
+    struct rgba_color foreground_color5;
+    struct rgba_color foreground_color6;
+    struct rgba_color foreground_color7;
+    struct rgba_color foreground_color8;
+    struct rgba_color foreground_color9;
+    struct rgba_color foreground_color10;
+    struct rgba_color space_underline_color;
+
     struct rgba_color foreground_color;
     struct rgba_color background_color;
     struct rgba_color background_color_dim;

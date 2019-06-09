@@ -24,6 +24,7 @@ static enum window_node_child window_node_get_child(struct window_node *node)
 static enum window_node_split window_node_get_split(struct window_node *node)
 {
     if (node->split != SPLIT_NONE) return node->split;
+    if (node->parent != NULL && node->parent->split == SPLIT_Z) return SPLIT_Z;
     return node->area.w / node->area.h >= 1.1618f ? SPLIT_Y : SPLIT_X;
 }
 
@@ -44,7 +45,10 @@ static void area_make_pair(struct view *view, struct window_node *node)
     float ratio = window_node_get_ratio(node);
     float gap   = window_node_get_gap(view);
 
-    if (split == SPLIT_Y) {
+    if (split == SPLIT_Z) {
+        node->left->area = node->area;
+        node->right->area = node->area;
+    } else if (split == SPLIT_Y) {
         node->left->area = node->area;
         node->left->area.w *= ratio;
         node->left->area.w -= gap;
@@ -265,6 +269,29 @@ struct window_node *window_node_find_next_leaf(struct window_node *node)
     }
 
     return window_node_find_first_leaf(node->parent->right->left);
+}
+
+struct window_node *window_node_find_common_ancestor(struct window_node *node, struct window_node *a, struct window_node *b) {
+    if (!node) return NULL;
+    if (node == a || node == b) return node;
+
+    struct window_node *left = window_node_find_common_ancestor(node->left, a, b);
+    struct window_node *right = window_node_find_common_ancestor(node->right, a, b);
+
+    if (left && right) return node;
+
+    return left ? left : right;
+}
+
+bool window_nodes_are_stacked(struct window_node *ancestor, struct window_node *node) {
+    do {
+        node = node->parent;
+
+        if (node->split != SPLIT_Z)
+            return false;
+    } while (node != ancestor);
+
+    return true;
 }
 
 void window_node_rotate(struct window_node *node, int degrees)

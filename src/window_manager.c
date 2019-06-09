@@ -751,6 +751,42 @@ struct window *window_manager_find_closest_window_in_direction(struct window_man
     return result;
 }
 
+struct window *window_manager_find_managed_window_below(struct space_manager *sm, struct window_manager *wm, struct window *window)
+{
+    struct view *view = space_manager_find_view(sm, space_manager_active_space());
+    if (!view) return NULL;
+
+    struct window_node *node = view_find_window_node(view, window->id);
+    if (!node) return NULL;
+
+    struct window_node *prev = window_node_find_prev_leaf(node);
+    if (!prev) return NULL;
+
+    struct window_node *ancestor = window_node_find_common_ancestor(view->root, node, prev);
+    if (!window_nodes_are_stacked(ancestor, node) || !window_nodes_are_stacked(ancestor, prev))
+        return NULL;
+
+    return window_manager_find_window(wm, prev->window_id);
+}
+
+struct window *window_manager_find_managed_window_above(struct space_manager *sm, struct window_manager *wm, struct window *window)
+{
+    struct view *view = space_manager_find_view(sm, space_manager_active_space());
+    if (!view) return NULL;
+
+    struct window_node *node = view_find_window_node(view, window->id);
+    if (!node) return NULL;
+
+    struct window_node *next = window_node_find_next_leaf(node);
+    if (!next) return NULL;
+
+    struct window_node *ancestor = window_node_find_common_ancestor(view->root, node, next);
+    if (!window_nodes_are_stacked(ancestor, node) || !window_nodes_are_stacked(ancestor, next))
+        return NULL;
+
+    return window_manager_find_window(wm, next->window_id);
+}
+
 struct window *window_manager_find_prev_managed_window(struct space_manager *sm, struct window_manager *wm, struct window *window)
 {
     struct view *view = space_manager_find_view(sm, space_manager_active_space());
@@ -1167,6 +1203,18 @@ enum window_op_error window_manager_set_window_insertion(struct space_manager *s
         window->border.insert_active = true;
         window->border.insert_dir = direction;
         view->insertion_point = node->window_id;
+    } else if (direction == DIR_ABOVE) {
+        node->split = SPLIT_Z;
+        node->child = CHILD_SECOND;
+        window->border.insert_active = true;
+        window->border.insert_dir = direction;
+        view->insertion_point = node->window_id;
+    } else if (direction == DIR_BELOW) {
+        node->split = SPLIT_Z;
+        node->child = CHILD_FIRST;
+        window->border.insert_active = true;
+        window->border.insert_dir = direction;
+        view->insertion_point = node->window_id;
     }
 
     border_window_refresh(window);
@@ -1364,7 +1412,7 @@ enum window_op_error window_manager_apply_grid(struct space_manager *sm, struct 
     struct view *dview = space_manager_find_view(sm, sid);
 
     CGRect bounds = display_bounds_constrained(did);
-    if (dview && dview->enable_padding) {
+    if (dview && dview->enable_padding && !window->is_floating) {
         bounds.origin.x    += dview->left_padding;
         bounds.size.width  -= (dview->left_padding + dview->right_padding);
         bounds.origin.y    += dview->top_padding;

@@ -26,6 +26,22 @@ static char osax_sdefn_file[MAXLEN];
 static char osax_payload_plist[MAXLEN];
 static char osax_bin_loader[MAXLEN];
 static char osax_bin_payload[MAXLEN];
+#define OSAX_DIR                  "/Library/ScriptingAdditions/yabai.osax"
+#define CONTENTS_DIR              "/Library/ScriptingAdditions/yabai.osax/Contents"
+#define CONTENTS_MACOS_DIR        "/Library/ScriptingAdditions/yabai.osax/Contents/MacOS"
+#define RESOURCES_DIR             "/Library/ScriptingAdditions/yabai.osax/Contents/Resources"
+#define BUNDLE_DIR                "/Library/ScriptingAdditions/yabai.osax/Contents/Resources/payload.bundle"
+#define BUNDLE_CONTENTS_DIR       "/Library/ScriptingAdditions/yabai.osax/Contents/Resources/payload.bundle/Contents"
+#define BUNDLE_CONTENTS_MACOS_DIR "/Library/ScriptingAdditions/yabai.osax/Contents/Resources/payload.bundle/Contents/MacOS"
+
+#define INFO_PLIST_FILE           "/Library/ScriptingAdditions/yabai.osax/Contents/Info.plist"
+#define DEFINITION_FILE           "/Library/ScriptingAdditions/yabai.osax/Contents/Resources/yabai.sdef"
+#define BUNDLE_INFO_PLIST_FILE    "/Library/ScriptingAdditions/yabai.osax/Contents/Resources/payload.bundle/Contents/Info.plist"
+
+#define BIN_INJECTOR              "/Library/ScriptingAdditions/yabai.osax/Contents/MacOS/loader"
+#define BIN_CORE                  "/Library/ScriptingAdditions/yabai.osax/Contents/Resources/payload.bundle/Contents/MacOS/payload"
+
+#define CMD_SA_REMOVE             "rm -rf /Library/ScriptingAdditions/yabai.osax 2>/dev/null"
 
 static char sa_def[] =
     "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
@@ -173,6 +189,11 @@ static void scripting_addition_prepare_binaries(void)
 
     snprintf(cmd, sizeof(cmd), "%s %s %s", "codesign -f -s -", osax_bin_payload, "2>/dev/null");
     system(cmd);
+
+    system("chmod +x \"/Library/ScriptingAdditions/yabai.osax/Contents/MacOS/loader\"");
+    system("chmod +x \"/Library/ScriptingAdditions/yabai.osax/Contents/Resources/payload.bundle/Contents/MacOS/payload\"");
+    system("codesign -f -s - \"/Library/ScriptingAdditions/yabai.osax/Contents/MacOS/loader\" 2>/dev/null");
+    system("codesign -f -s - \"/Library/ScriptingAdditions/yabai.osax/Contents/Resources/payload.bundle/Contents/MacOS/payload\" 2>/dev/null");
 }
 
 static bool scripting_addition_request_handshake(char *version, uint32_t *attrib)

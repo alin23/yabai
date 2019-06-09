@@ -387,7 +387,43 @@ void bar_set_space_strip(struct bar *bar, char **icon_strip)
     }
 
     for (int i = 0; i < buf_len(bar->_space_icon_strip); ++i) {
-        struct bar_line space_line = bar_prepare_line(bar->i_font, bar->_space_icon_strip[i], bar->foreground_color);
+        struct bar_line space_line;
+        switch (i + 1) {
+            case 1:
+                space_line = bar_prepare_line(bar->i_font, bar->_space_icon_strip[i], bar->foreground_color1);
+                break;
+            case 2:
+                space_line = bar_prepare_line(bar->i_font, bar->_space_icon_strip[i], bar->foreground_color2);
+                break;
+            case 3:
+                space_line = bar_prepare_line(bar->i_font, bar->_space_icon_strip[i], bar->foreground_color3);
+                break;
+            case 4:
+                space_line = bar_prepare_line(bar->i_font, bar->_space_icon_strip[i], bar->foreground_color4);
+                break;
+            case 5:
+                space_line = bar_prepare_line(bar->i_font, bar->_space_icon_strip[i], bar->foreground_color5);
+                break;
+            case 6:
+                space_line = bar_prepare_line(bar->i_font, bar->_space_icon_strip[i], bar->foreground_color6);
+                break;
+            case 7:
+                space_line = bar_prepare_line(bar->i_font, bar->_space_icon_strip[i], bar->foreground_color7);
+                break;
+            case 8:
+                space_line = bar_prepare_line(bar->i_font, bar->_space_icon_strip[i], bar->foreground_color8);
+                break;
+            case 9:
+                space_line = bar_prepare_line(bar->i_font, bar->_space_icon_strip[i], bar->foreground_color9);
+                break;
+            case 10:
+                space_line = bar_prepare_line(bar->i_font, bar->_space_icon_strip[i], bar->foreground_color10);
+                break;
+            default:
+                space_line = bar_prepare_line(bar->i_font, bar->_space_icon_strip[i], bar->foreground_color);
+                break;
+        }
+
         buf_push(bar->space_icon_strip, space_line);
     }
 
@@ -529,8 +565,20 @@ void bar_create(struct bar *bar)
     SLSClearWindowTags(g_connection, bar->id, clear_tags, 64);
     SLSSetWindowOpacity(g_connection, bar->id, 0);
     SLSSetMouseEventEnableFlags(g_connection, bar->id, false);
-    SLSSetWindowLevel(g_connection, bar->id, CGWindowLevelForKey(4));
+    SLSSetWindowLevel(g_connection, bar->id, CGWindowLevelForKey(2));
     bar->context = SLWindowContextCreate(g_connection, bar->id, 0);
+
+    if (!bar->foreground_color1.is_valid)     bar->foreground_color1     = bar->foreground_color;
+    if (!bar->foreground_color2.is_valid)     bar->foreground_color2     = bar->foreground_color;
+    if (!bar->foreground_color3.is_valid)     bar->foreground_color3     = bar->foreground_color;
+    if (!bar->foreground_color4.is_valid)     bar->foreground_color4     = bar->foreground_color;
+    if (!bar->foreground_color5.is_valid)     bar->foreground_color5     = bar->foreground_color;
+    if (!bar->foreground_color6.is_valid)     bar->foreground_color6     = bar->foreground_color;
+    if (!bar->foreground_color7.is_valid)     bar->foreground_color7     = bar->foreground_color;
+    if (!bar->foreground_color8.is_valid)     bar->foreground_color8     = bar->foreground_color;
+    if (!bar->foreground_color9.is_valid)     bar->foreground_color9     = bar->foreground_color;
+    if (!bar->foreground_color10.is_valid)     bar->foreground_color10     = bar->foreground_color;
+    if (!bar->space_underline_color.is_valid)     bar->space_underline_color     = rgba_color_from_hex(0xffd4d232);
 
     int refresh_frequency = 5;
     bar->power_source = IOPSNotificationCreateRunLoopSource(power_handler, NULL);

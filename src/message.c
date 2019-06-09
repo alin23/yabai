@@ -52,6 +52,19 @@ extern bool g_verbose;
 #define COMMAND_CONFIG_BAR_ICON_FONT         "status_bar_icon_font"
 #define COMMAND_CONFIG_BAR_BACKGROUND        "status_bar_background_color"
 #define COMMAND_CONFIG_BAR_FOREGROUND        "status_bar_foreground_color"
+
+#define COMMAND_CONFIG_BAR_FOREGROUND1        "status_bar_foreground_color1"
+#define COMMAND_CONFIG_BAR_FOREGROUND2        "status_bar_foreground_color2"
+#define COMMAND_CONFIG_BAR_FOREGROUND3        "status_bar_foreground_color3"
+#define COMMAND_CONFIG_BAR_FOREGROUND4        "status_bar_foreground_color4"
+#define COMMAND_CONFIG_BAR_FOREGROUND5        "status_bar_foreground_color5"
+#define COMMAND_CONFIG_BAR_FOREGROUND6        "status_bar_foreground_color6"
+#define COMMAND_CONFIG_BAR_FOREGROUND7        "status_bar_foreground_color7"
+#define COMMAND_CONFIG_BAR_FOREGROUND8        "status_bar_foreground_color8"
+#define COMMAND_CONFIG_BAR_FOREGROUND9        "status_bar_foreground_color9"
+#define COMMAND_CONFIG_BAR_FOREGROUND10        "status_bar_foreground_color10"
+#define COMMAND_CONFIG_BAR_SPACE_UNDERLINE_COLOR        "status_bar_space_underline_color"
+
 #define COMMAND_CONFIG_BAR_SPACE_STRIP       "status_bar_space_icon_strip"
 #define COMMAND_CONFIG_BAR_POWER_STRIP       "status_bar_power_icon_strip"
 #define COMMAND_CONFIG_BAR_SPACE_ICON        "status_bar_space_icon"
@@ -134,6 +147,8 @@ extern bool g_verbose;
 #define ARGUMENT_WINDOW_DIR_EAST      "east"
 #define ARGUMENT_WINDOW_DIR_SOUTH     "south"
 #define ARGUMENT_WINDOW_DIR_WEST      "west"
+#define ARGUMENT_WINDOW_DIR_ABOVE     "above"
+#define ARGUMENT_WINDOW_DIR_BELOW     "below"
 #define ARGUMENT_WINDOW_SEL_MOUSE     "mouse"
 #define ARGUMENT_WINDOW_SEL_LARGEST   "largest"
 #define ARGUMENT_WINDOW_SEL_SMALLEST  "smallest"
@@ -839,6 +854,138 @@ static void handle_domain_config(FILE *rsp, struct token domain, char *message)
                 daemon_fail(rsp, "unknown value '%.*s' given to command '%.*s' for domain '%.*s'\n", value.length, value.text, command.length, command.text, domain.length, domain.text);
             }
         }
+    } else if (token_equals(command, COMMAND_CONFIG_BAR_SPACE_UNDERLINE_COLOR)) {
+        struct token value = get_token(&message);
+        if (!token_is_valid(value)) {
+            fprintf(rsp, "0x%x\n", g_bar.space_underline_color.p);
+        } else {
+            uint32_t color = token_to_uint32t(value);
+            if (color) {
+                g_bar.space_underline_color = rgba_color_from_hex(color);
+            } else {
+                daemon_fail(rsp, "unknown value '%.*s' given to command '%.*s' for domain '%.*s'\n", value.length, value.text, command.length, command.text, domain.length, domain.text);
+            }
+        }
+    } else if (token_equals(command, COMMAND_CONFIG_BAR_FOREGROUND1)) {
+        struct token value = get_token(&message);
+        if (!token_is_valid(value)) {
+            fprintf(rsp, "0x%x\n", g_bar.foreground_color1.p);
+        } else {
+            uint32_t color = token_to_uint32t(value);
+            if (color) {
+                g_bar.foreground_color1 = rgba_color_from_hex(color);
+            } else {
+                daemon_fail(rsp, "unknown value '%.*s' given to command '%.*s' for domain '%.*s'\n", value.length, value.text, command.length, command.text, domain.length, domain.text);
+            }
+        }
+    } else if (token_equals(command, COMMAND_CONFIG_BAR_FOREGROUND2)) {
+        struct token value = get_token(&message);
+        if (!token_is_valid(value)) {
+            fprintf(rsp, "0x%x\n", g_bar.foreground_color2.p);
+        } else {
+            uint32_t color = token_to_uint32t(value);
+            if (color) {
+                g_bar.foreground_color2 = rgba_color_from_hex(color);
+            } else {
+                daemon_fail(rsp, "unknown value '%.*s' given to command '%.*s' for domain '%.*s'\n", value.length, value.text, command.length, command.text, domain.length, domain.text);
+            }
+        }
+    } else if (token_equals(command, COMMAND_CONFIG_BAR_FOREGROUND3)) {
+        struct token value = get_token(&message);
+        if (!token_is_valid(value)) {
+            fprintf(rsp, "0x%x\n", g_bar.foreground_color3.p);
+        } else {
+            uint32_t color = token_to_uint32t(value);
+            if (color) {
+                g_bar.foreground_color3 = rgba_color_from_hex(color);
+            } else {
+                daemon_fail(rsp, "unknown value '%.*s' given to command '%.*s' for domain '%.*s'\n", value.length, value.text, command.length, command.text, domain.length, domain.text);
+            }
+        }
+    } else if (token_equals(command, COMMAND_CONFIG_BAR_FOREGROUND4)) {
+        struct token value = get_token(&message);
+        if (!token_is_valid(value)) {
+            fprintf(rsp, "0x%x\n", g_bar.foreground_color4.p);
+        } else {
+            uint32_t color = token_to_uint32t(value);
+            if (color) {
+                g_bar.foreground_color4 = rgba_color_from_hex(color);
+            } else {
+                daemon_fail(rsp, "unknown value '%.*s' given to command '%.*s' for domain '%.*s'\n", value.length, value.text, command.length, command.text, domain.length, domain.text);
+            }
+        }
+    } else if (token_equals(command, COMMAND_CONFIG_BAR_FOREGROUND5)) {
+        struct token value = get_token(&message);
+        if (!token_is_valid(value)) {
+            fprintf(rsp, "0x%x\n", g_bar.foreground_color5.p);
+        } else {
+            uint32_t color = token_to_uint32t(value);
+            if (color) {
+                g_bar.foreground_color5 = rgba_color_from_hex(color);
+            } else {
+                daemon_fail(rsp, "unknown value '%.*s' given to command '%.*s' for domain '%.*s'\n", value.length, value.text, command.length, command.text, domain.length, domain.text);
+            }
+        }
+    } else if (token_equals(command, COMMAND_CONFIG_BAR_FOREGROUND6)) {
+        struct token value = get_token(&message);
+        if (!token_is_valid(value)) {
+            fprintf(rsp, "0x%x\n", g_bar.foreground_color6.p);
+        } else {
+            uint32_t color = token_to_uint32t(value);
+            if (color) {
+                g_bar.foreground_color6 = rgba_color_from_hex(color);
+            } else {
+                daemon_fail(rsp, "unknown value '%.*s' given to command '%.*s' for domain '%.*s'\n", value.length, value.text, command.length, command.text, domain.length, domain.text);
+            }
+        }
+    } else if (token_equals(command, COMMAND_CONFIG_BAR_FOREGROUND7)) {
+        struct token value = get_token(&message);
+        if (!token_is_valid(value)) {
+            fprintf(rsp, "0x%x\n", g_bar.foreground_color7.p);
+        } else {
+            uint32_t color = token_to_uint32t(value);
+            if (color) {
+                g_bar.foreground_color7 = rgba_color_from_hex(color);
+            } else {
+                daemon_fail(rsp, "unknown value '%.*s' given to command '%.*s' for domain '%.*s'\n", value.length, value.text, command.length, command.text, domain.length, domain.text);
+            }
+        }
+    } else if (token_equals(command, COMMAND_CONFIG_BAR_FOREGROUND8)) {
+        struct token value = get_token(&message);
+        if (!token_is_valid(value)) {
+            fprintf(rsp, "0x%x\n", g_bar.foreground_color8.p);
+        } else {
+            uint32_t color = token_to_uint32t(value);
+            if (color) {
+                g_bar.foreground_color8 = rgba_color_from_hex(color);
+            } else {
+                daemon_fail(rsp, "unknown value '%.*s' given to command '%.*s' for domain '%.*s'\n", value.length, value.text, command.length, command.text, domain.length, domain.text);
+            }
+        }
+    } else if (token_equals(command, COMMAND_CONFIG_BAR_FOREGROUND9)) {
+        struct token value = get_token(&message);
+        if (!token_is_valid(value)) {
+            fprintf(rsp, "0x%x\n", g_bar.foreground_color9.p);
+        } else {
+            uint32_t color = token_to_uint32t(value);
+            if (color) {
+                g_bar.foreground_color9 = rgba_color_from_hex(color);
+            } else {
+                daemon_fail(rsp, "unknown value '%.*s' given to command '%.*s' for domain '%.*s'\n", value.length, value.text, command.length, command.text, domain.length, domain.text);
+            }
+        }
+    } else if (token_equals(command, COMMAND_CONFIG_BAR_FOREGROUND10)) {
+        struct token value = get_token(&message);
+        if (!token_is_valid(value)) {
+            fprintf(rsp, "0x%x\n", g_bar.foreground_color10.p);
+        } else {
+            uint32_t color = token_to_uint32t(value);
+            if (color) {
+                g_bar.foreground_color10 = rgba_color_from_hex(color);
+            } else {
+                daemon_fail(rsp, "unknown value '%.*s' given to command '%.*s' for domain '%.*s'\n", value.length, value.text, command.length, command.text, domain.length, domain.text);
+            }
+        }
     } else if (token_equals(command, COMMAND_CONFIG_BAR_SPACE_STRIP)) {
         char **icon_strip = NULL;
         struct token token = get_token(&message);
@@ -1164,6 +1311,28 @@ static struct selector parse_window_selector(FILE *rsp, char **message, struct w
         } else {
             daemon_fail(rsp, "could not locate the selected window.\n");
         }
+    } else if (token_equals(result.token, ARGUMENT_WINDOW_DIR_ABOVE)) {
+        if (acting_window) {
+            struct window *closest_window = window_manager_find_managed_window_above(&g_space_manager, &g_window_manager, acting_window);
+            if (closest_window) {
+                result.window = closest_window;
+            } else {
+                daemon_fail(rsp, "could not locate a managed window above.\n");
+            }
+        } else {
+            daemon_fail(rsp, "could not locate the selected window.\n");
+        }
+    } else if (token_equals(result.token, ARGUMENT_WINDOW_DIR_BELOW)) {
+        if (acting_window) {
+            struct window *closest_window = window_manager_find_managed_window_below(&g_space_manager, &g_window_manager, acting_window);
+            if (closest_window) {
+                result.window = closest_window;
+            } else {
+                daemon_fail(rsp, "could not locate a managed window below.\n");
+            }
+        } else {
+            daemon_fail(rsp, "could not locate the selected window.\n");
+        }
     } else if (token_equals(result.token, ARGUMENT_WINDOW_SEL_MOUSE)) {
         struct window *mouse_window = window_manager_find_window_below_cursor(&g_window_manager);
         if (mouse_window) {
@@ -1268,6 +1437,10 @@ static struct selector parse_dir_selector(FILE *rsp, char **message)
         result.dir = DIR_SOUTH;
     } else if (token_equals(result.token, ARGUMENT_WINDOW_DIR_WEST)) {
         result.dir = DIR_WEST;
+    } else if (token_equals(result.token, ARGUMENT_WINDOW_DIR_ABOVE)) {
+        result.dir = DIR_ABOVE;
+    } else if (token_equals(result.token, ARGUMENT_WINDOW_DIR_BELOW)) {
+        result.dir = DIR_BELOW;
     } else {
         result.did_parse = false;
         daemon_fail(rsp, "value '%.*s' is not a valid option for DIR_SEL\n", result.token.length, result.token.text);

@@ -1,0 +1,2 @@
+#!/bin/bash
+brew services stop yabai; brew reinstall yabai && codesign -fs "Developer ID Application: Alin Panaitiu (RDDXV84A73)"  -o runtime --preserve-metadata=identifier,flags --deep $(realpath $(which yabai)) && brew services restart yabai

@@ -94,7 +94,7 @@ CGRect display_bounds_constrained(uint32_t did)
     CGRect dock   = display_manager_dock_rect();
 
     if (g_bar.enabled && g_bar.did == did) {
-        frame.origin.y    += g_bar.frame.size.height;
+        // frame.origin.y    += g_bar.frame.size.height;
         frame.size.height -= g_bar.frame.size.height;
     }
 
