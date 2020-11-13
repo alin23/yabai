@@ -328,8 +328,8 @@ void display_manager_focus_display_with_point(uint32_t did, CGPoint point, bool 
 err_ref:
     CFRelease(element_ref);
 click:
-    CGPostMouseEvent(point, update_cursor_position, 1, true);
-    CGPostMouseEvent(point, update_cursor_position, 1, false);
+    // CGPostMouseEvent(point, update_cursor_position, 1, true);
+    // CGPostMouseEvent(point, update_cursor_position, 1, false);
 out:;
 }
 #pragma clang diagnostic pop
