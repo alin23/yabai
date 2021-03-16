@@ -1,3 +1,6 @@
+#include "view.h"
+#include "misc/log.h"
+
 extern int g_connection;
 extern int g_floating_window_level;
 extern struct display_manager g_display_manager;
@@ -637,6 +640,24 @@ void view_stack_window_node(struct view *view, struct window_node *node, struct 
     ++node->window_count;
 }
 
+bool view_window_should_split(struct view *view, struct window_node *node)
+{
+    if (!node) node = view_find_window_node(view, g_window_manager.focused_window_id);
+    if (!node) node = view_find_min_depth_leaf_node(view->root);
+
+    enum window_node_split split = window_node_get_split(node);
+    float ratio = window_node_get_ratio(node);
+    float gap   = window_node_get_gap(view);
+    bool should_split = true;
+
+    if (split == SPLIT_Y) {
+        should_split = ((node->area.w * ratio) - gap) > g_window_manager.min_window_width && node->area.h > g_window_manager.min_window_height;
+    } else {
+        should_split = (node->area.h * ratio) - gap > g_window_manager.min_window_height && node->area.w > g_window_manager.min_window_width;
+    }
+    return should_split;
+}
+
 void view_add_window_node(struct view *view, struct window *window)
 {
     if (!window_node_is_occupied(view->root) &&
@@ -666,6 +687,13 @@ void view_add_window_node(struct view *view, struct window *window)
 
         if (!leaf) leaf = view_find_window_node(view, g_window_manager.focused_window_id);
         if (!leaf) leaf = view_find_min_depth_leaf_node(view->root);
+
+        if (!view_window_should_split(view, leaf)) {
+            if (g_window_manager.window_size_match_action == WINDOW_SIZE_MATCH_ACTION_STACK) {
+                view_stack_window_node(view, leaf, window);
+                return;
+            }
+        }
 
         window_node_split(view, leaf, window);
 

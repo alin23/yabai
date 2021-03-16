@@ -1,3 +1,6 @@
+#include "event.h"
+#include "misc/log.h"
+
 extern struct event_loop g_event_loop;
 extern struct process_manager g_process_manager;
 extern struct display_manager g_display_manager;
@@ -379,6 +382,7 @@ static EVENT_CALLBACK(EVENT_HANDLER_WINDOW_FOCUSED)
 
     debug("%s: %s %d\n", __FUNCTION__, window->application->name, window->id);
     window_did_receive_focus(&g_window_manager, &g_mouse_state, window);
+    debug("%s: %s %d\n", __FUNCTION__, window->application->name, window->id);
     event_signal_push(SIGNAL_WINDOW_FOCUSED, window);
 
     return EVENT_SUCCESS;
