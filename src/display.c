@@ -92,8 +92,8 @@ CGRect display_bounds(uint32_t did)
 CGRect display_bounds_constrained(uint32_t did)
 {
     CGRect frame  = display_bounds(did);
-    CGRect menu   = display_manager_menu_bar_rect(did);
-    CGRect dock   = display_manager_dock_rect();
+    // CGRect menu   = display_manager_menu_bar_rect(did);
+    // CGRect dock   = display_manager_dock_rect();
 
     if ((g_display_manager.mode == EXTERNAL_BAR_MAIN &&
          did == display_manager_main_display_id()) ||
@@ -103,27 +103,27 @@ CGRect display_bounds_constrained(uint32_t did)
         frame.size.height -= g_display_manager.bottom_padding;
     }
 
-    if (!display_manager_menu_bar_hidden()) {
-        frame.origin.y    += menu.size.height;
-        frame.size.height -= menu.size.height;
-    }
+    // if (!display_manager_menu_bar_hidden()) {
+    //     frame.origin.y    += menu.size.height;
+    //     frame.size.height -= menu.size.height;
+    // }
 
-    if (!display_manager_dock_hidden()) {
-        if (did == display_manager_dock_display_id()) {
-            switch (display_manager_dock_orientation()) {
-            case DOCK_ORIENTATION_LEFT: {
-                frame.origin.x   += dock.size.width;
-                frame.size.width -= dock.size.width;
-            } break;
-            case DOCK_ORIENTATION_RIGHT: {
-                frame.size.width -= dock.size.width;
-            } break;
-            case DOCK_ORIENTATION_BOTTOM: {
-                frame.size.height -= dock.size.height;
-            } break;
-            }
-        }
-    }
+    // if (!display_manager_dock_hidden()) {
+    //     if (did == display_manager_dock_display_id()) {
+    //         switch (display_manager_dock_orientation()) {
+    //         case DOCK_ORIENTATION_LEFT: {
+    //             frame.origin.x   += dock.size.width;
+    //             frame.size.width -= dock.size.width;
+    //         } break;
+    //         case DOCK_ORIENTATION_RIGHT: {
+    //             frame.size.width -= dock.size.width;
+    //         } break;
+    //         case DOCK_ORIENTATION_BOTTOM: {
+    //             frame.size.height -= dock.size.height;
+    //         } break;
+    //         }
+    //     }
+    // }
 
     return frame;
 }

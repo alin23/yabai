@@ -34,6 +34,8 @@ extern bool g_verbose;
 #define COMMAND_CONFIG_SHADOW                "window_shadow"
 #define COMMAND_CONFIG_ACTIVE_WINDOW_OPACITY "active_window_opacity"
 #define COMMAND_CONFIG_NORMAL_WINDOW_OPACITY "normal_window_opacity"
+#define COMMAND_CONFIG_MIN_WINDOW_WIDTH      "min_window_width"
+#define COMMAND_CONFIG_MIN_WINDOW_HEIGHT     "min_window_height"
 #define COMMAND_CONFIG_INSERT_FEEDBACK_COLOR "insert_feedback_color"
 #define COMMAND_CONFIG_TOP_PADDING           "top_padding"
 #define COMMAND_CONFIG_BOTTOM_PADDING        "bottom_padding"
@@ -47,6 +49,7 @@ extern bool g_verbose;
 #define COMMAND_CONFIG_MOUSE_ACTION1         "mouse_action1"
 #define COMMAND_CONFIG_MOUSE_ACTION2         "mouse_action2"
 #define COMMAND_CONFIG_MOUSE_DROP_ACTION     "mouse_drop_action"
+#define COMMAND_CONFIG_WINDOW_SIZE_MATCH_ACTION  "window_size_match_action"
 #define COMMAND_CONFIG_EXTERNAL_BAR          "external_bar"
 
 #define SELECTOR_CONFIG_SPACE                "--space"
@@ -68,6 +71,8 @@ extern bool g_verbose;
 #define ARGUMENT_CONFIG_MOUSE_ACTION_RESIZE  "resize"
 #define ARGUMENT_CONFIG_MOUSE_ACTION_SWAP    "swap"
 #define ARGUMENT_CONFIG_MOUSE_ACTION_STACK   "stack"
+#define ARGUMENT_CONFIG_WINDOW_SIZE_MATCH_ACTION_FLOAT    "float"
+#define ARGUMENT_CONFIG_WINDOW_SIZE_MATCH_ACTION_STACK   "stack"
 #define ARGUMENT_CONFIG_EXTERNAL_BAR_MAIN    "main"
 #define ARGUMENT_CONFIG_EXTERNAL_BAR_ALL     "all"
 #define ARGUMENT_CONFIG_EXTERNAL_BAR         "%5[^:]:%d:%d"
@@ -1115,6 +1120,28 @@ static void handle_domain_config(FILE *rsp, struct token domain, char *message)
         } else {
             daemon_fail(rsp, "unknown value '%.*s' given to command '%.*s' for domain '%.*s'\n", value.token.length, value.token.text, command.length, command.text, domain.length, domain.text);
         }
+    } else if (token_equals(command, COMMAND_CONFIG_MIN_WINDOW_WIDTH)) {
+        struct token_value value = token_to_value(get_token(&message), false);
+        if (value.type == TOKEN_TYPE_INVALID) {
+            fprintf(rsp, "%.2f\n", g_window_manager.min_window_width);
+        } else if ((value.type == TOKEN_TYPE_FLOAT && value.float_value >= 0.0f)) {
+            window_manager_set_min_window_width(&g_window_manager, value.float_value);
+        } else if ((value.type == TOKEN_TYPE_INT && value.int_value >= 0)) {
+            window_manager_set_min_window_width(&g_window_manager, (float)value.int_value);
+        } else {
+            daemon_fail(rsp, "unknown value '%.*s' given to command '%.*s' for domain '%.*s'\n", value.token.length, value.token.text, command.length, command.text, domain.length, domain.text);
+        }
+    } else if (token_equals(command, COMMAND_CONFIG_MIN_WINDOW_HEIGHT)) {
+        struct token_value value = token_to_value(get_token(&message), false);
+        if (value.type == TOKEN_TYPE_INVALID) {
+            fprintf(rsp, "%.2f\n", g_window_manager.min_window_height);
+        } else if (value.type == TOKEN_TYPE_FLOAT && value.float_value >= 0.0f) {
+            window_manager_set_min_window_height(&g_window_manager, value.float_value);
+        } else if ((value.type == TOKEN_TYPE_INT && value.int_value >= 0)) {
+            window_manager_set_min_window_height(&g_window_manager, (float)value.int_value);
+        } else {
+            daemon_fail(rsp, "unknown value '%.*s' given to command '%.*s' for domain '%.*s'\n", value.token.length, value.token.text, command.length, command.text, domain.length, domain.text);
+        }
     } else if (token_equals(command, COMMAND_CONFIG_INSERT_FEEDBACK_COLOR)) {
         struct token_value value = token_to_value(get_token(&message), false);
         if (value.type == TOKEN_TYPE_INVALID) {
@@ -1354,6 +1381,17 @@ static void handle_domain_config(FILE *rsp, struct token domain, char *message)
             g_mouse_state.drop_action = MOUSE_MODE_SWAP;
         } else if (token_equals(value, ARGUMENT_CONFIG_MOUSE_ACTION_STACK)) {
             g_mouse_state.drop_action = MOUSE_MODE_STACK;
+        } else {
+            daemon_fail(rsp, "unknown value '%.*s' given to command '%.*s' for domain '%.*s'\n", value.length, value.text, command.length, command.text, domain.length, domain.text);
+        }
+    } else if (token_equals(command, COMMAND_CONFIG_WINDOW_SIZE_MATCH_ACTION)) {
+        struct token value = get_token(&message);
+        if (!token_is_valid(value)) {
+            fprintf(rsp, "%s\n", window_size_match_action_str[g_window_manager.window_size_match_action]);
+        } else if (token_equals(value, ARGUMENT_CONFIG_WINDOW_SIZE_MATCH_ACTION_FLOAT)) {
+            g_window_manager.window_size_match_action = WINDOW_SIZE_MATCH_ACTION_FLOAT;
+        } else if (token_equals(value, ARGUMENT_CONFIG_WINDOW_SIZE_MATCH_ACTION_STACK)) {
+            g_window_manager.window_size_match_action = WINDOW_SIZE_MATCH_ACTION_STACK;
         } else {
             daemon_fail(rsp, "unknown value '%.*s' given to command '%.*s' for domain '%.*s'\n", value.length, value.text, command.length, command.text, domain.length, domain.text);
         }
