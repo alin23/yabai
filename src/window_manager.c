@@ -486,6 +486,16 @@ void window_manager_set_active_window_opacity(struct window_manager *wm, float o
     if (window) window_manager_set_window_opacity(wm, window, wm->active_window_opacity);
 }
 
+void window_manager_set_min_window_width(struct window_manager *wm, float width)
+{
+    wm->min_window_width = width;
+}
+
+void window_manager_set_min_window_height(struct window_manager *wm, float width)
+{
+    wm->min_window_height = width;
+}
+
 void window_manager_set_normal_window_opacity(struct window_manager *wm, float opacity)
 {
     wm->normal_window_opacity = opacity;
@@ -1611,6 +1621,9 @@ void window_manager_init(struct window_manager *wm)
     wm->active_border_color = rgba_color_from_hex(0xff775759);
     wm->normal_border_color = rgba_color_from_hex(0xff555555);
     wm->border_width = 6;
+    wm->window_size_match_action = WINDOW_SIZE_MATCH_ACTION_FLOAT;
+    wm->min_window_width = 0;
+    wm->min_window_height = 0;
 
     table_init(&wm->application, 150, hash_wm, compare_wm);
     table_init(&wm->window, 150, hash_wm, compare_wm);

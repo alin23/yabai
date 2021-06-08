@@ -1,3 +1,6 @@
+#include "space_manager.h"
+#include "view.h"
+
 extern struct window_manager g_window_manager;
 extern bool g_mission_control_active;
 extern int g_connection;
@@ -397,6 +400,10 @@ struct view *space_manager_tile_window_on_space_with_insertion_point(struct spac
 
     struct view *view = space_manager_find_view(sm, sid);
     if (view->layout == VIEW_FLOAT) return view;
+    if (!view_window_should_split(view, NULL) && g_window_manager.window_size_match_action == WINDOW_SIZE_MATCH_ACTION_FLOAT) {
+        window->is_floating = true;
+        return view;
+    }
 
     if (view->layout == VIEW_BSP && insertion_point) {
         prev_insertion_point = view->insertion_point;
